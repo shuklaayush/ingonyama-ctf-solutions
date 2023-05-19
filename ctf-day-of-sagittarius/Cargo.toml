@@ -1,0 +1,7 @@
+[workspace]
+members = [
+  "fairclient",
+  "sagittarius/game",
+  "sagittarius/methods",
+  "sagittarius/zk",
+]

@@ -1,0 +1,18 @@
+[package]
+name = "ingo-cft-groth"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base64 = "0.13.0"
+
+ark-ff = { version = "0.4.0", default-features = false }
+ark-groth16 = "0.4.0"
+ark-bls12-377 = { version = "0.4.0", default-features = false, features = ["curve"] }
+ark-serialize = { version = "0.4.0", default-features = false, features = [ "derive" ] }
+ark-ec = { version = "0.4.0", default-features = false }
+ark-relations = { version = "0.4.0", default-features = false }
+ark-std = { version = "0.4.0", default-features = false }
+ark-crypto-primitives = { version = "0.4.0", default-features = false, features = ["snark"] }

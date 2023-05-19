@@ -1,0 +1,67 @@
+import "hashes/sha256/512bitPadded" as sha512;
+import "hashes/sha256/sha256Padded" as sha256padded;
+import "hashes/poseidon/poseidon" as poseidon;
+
+from "field" import FIELD_SIZE_IN_BITS;
+import "utils/pack/bool/unpack";
+import "utils/casts/u8_from_bits";
+
+
+def cast<N, P>(field input) -> u8[P] {
+    bool[FIELD_SIZE_IN_BITS] bits = unpack(input);
+    bool[N] bits_input = bits[FIELD_SIZE_IN_BITS-N..];
+    assert(N == 8 * P);
+    u8[P] mut r = [0; P];
+    for u32 i in 0..P {
+        r[i] = u8_from_bits(bits_input[i * 8..(i + 1) * 8]);
+    }
+    return r;
+}
+
+def calculateNullifierHash(field nullifier) -> field {
+    // Use poseidon here to reduce the number of constraints
+    return poseidon([nullifier]);
+}
+
+const u32 DEPTH = 5;
+
+// directionSelector => true if current digest is on the rhs of the hash
+struct MerkleProof {
+    u32[8] leaf;
+    bool[DEPTH] directionSelector;
+    u32[DEPTH][8] path;
+}
+
+def select(bool condition, u32[8] left, u32[8] right) -> (u32[8], u32[8]) {
+    return (condition ? right : left, condition ? left : right);
+}
+
+def checkMerkleProof(u32[8] root, MerkleProof proof) -> bool {
+    // Start from the leaf
+    u32[8] mut digest = proof.leaf;
+
+	// Loop up the tree
+    for u32 i in 0..DEPTH {
+	    (u32[8], u32[8]) s = select(proof.directionSelector[i], digest, proof.path[i]);
+	    digest = sha512(s.0, s.1);
+    }
+
+    return digest == root;
+}
+
+def main(u32[8] root, private MerkleProof merkleProof, field nullifierHash, private field nullifier, private field secret) -> bool {
+    // Check that note hash is in the merkle tree
+    assert(checkMerkleProof(root, merkleProof));
+
+    // Check that the nullifier hash match with public one
+    field trueNullifierHash = calculateNullifierHash(nullifier);
+    assert(nullifierHash == trueNullifierHash);
+
+    // Construct note from secret and nullifier
+    u8[16] nullifierBytes = cast::<128, 16>(nullifier);
+    u8[16] secretBytes = cast::<128, 16>(secret);
+    u8[32] constraintPreimageBytes = [...nullifierBytes, ...secretBytes];
+    u32[8] trueConstraint = sha256padded::<32>(constraintPreimageBytes);
+
+    return trueConstraint == merkleProof.leaf;
+}

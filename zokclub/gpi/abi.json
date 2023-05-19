@@ -1,0 +1,70 @@
+{
+  "inputs": [
+    {
+      "name": "root",
+      "public": true,
+      "type": "array",
+      "components": {
+        "size": 8,
+        "type": "u32"
+      }
+    },
+    {
+      "name": "merkleProof",
+      "public": false,
+      "type": "struct",
+      "components": {
+        "name": "MerkleProof",
+        "generics": [],
+        "members": [
+          {
+            "name": "leaf",
+            "type": "array",
+            "components": {
+              "size": 8,
+              "type": "u32"
+            }
+          },
+          {
+            "name": "directionSelector",
+            "type": "array",
+            "components": {
+              "size": 5,
+              "type": "bool"
+            }
+          },
+          {
+            "name": "path",
+            "type": "array",
+            "components": {
+              "size": 5,
+              "type": "array",
+              "components": {
+                "size": 8,
+                "type": "u32"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "nullifierHash",
+      "public": true,
+      "type": "field"
+    },
+    {
+      "name": "nullifier",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "secret",
+      "public": false,
+      "type": "field"
+    }
+  ],
+  "output": {
+    "type": "bool"
+  }
+}

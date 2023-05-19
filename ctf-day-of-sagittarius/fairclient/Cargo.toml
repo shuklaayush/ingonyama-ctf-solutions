@@ -1,0 +1,21 @@
+[package]
+name = "fairclient"
+version = "0.1.0"
+edition = "2021"
+authors = ["Roman Palkin <roman@ingonyama.com>", "OpenAI <info@openai.com>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = "0.4"
+env_logger = "0.9"
+crossterm = "0.26.1"
+serde = { version = "1.0", default-features = false }
+array-init = "2.0"
+lazy_static = "1.4.0"
+rand = { version = "0.8", features = ["small_rng"] }
+serde_cbor = "0.10"
+tokio = { version = "1.27.0", features = ["full"] }
+risc0-zkvm = { version = "0.14.0", features = ["prove"] }
+sagittarius-game = { path = "../sagittarius/game" }
+sagittarius-zk = { path = "../sagittarius/zk" }
