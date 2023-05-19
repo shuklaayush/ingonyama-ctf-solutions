@@ -1,10 +1,10 @@
 # Ingonyama CTF write-up
 
-![King of the Jungle](https://hackmd.io/_uploads/BJumyBHHh.png)
+![King of the Jungle](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/451c2dfb-2188-460a-bef2-a2f0df64644f)
 
 The [Ingonyama CTF](https://ctf.ingonyama.com/), a Capture-the-flag competition held from May 13-15, 2023, was primarily focused on Zero-knowledge (ZK) and general cryptography. The contest was organized by Ingonyama, a company building hardware accelerators for zero-knowledge proofs (the term Ingonyama translates to "Lion"). The competition was a mix of challenges aimed at hacking or deciphering a cryptographic system to acquire a flag.
 
-![Challenges](https://hackmd.io/_uploads/HJKxqJHSn.png)
+![Challenges](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/50070111-fca7-4084-abd2-dabfc784541f)
 
 There were a total of 13 challenges, including 2 fun tasks. Although I was part of an automatically assigned team (King of the Jungle), I couldn't connect with my teammates and ended up doing the contest alone. I managed to solve 10 challenges and secured the 5th position (with 1357 points) on the leaderboard, out of ~35 participating teams.
 
@@ -173,15 +173,15 @@ for tx in txs:
     print(result.stdout)
 ```
 
-![transactions](https://hackmd.io/_uploads/SyrI7mHS3.png)
+![transactions](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/a589a52e-4a95-4143-acd5-be240fecc2dd)
 
 I found the [profile](https://play.zkasino.io/profile?u=0x475e3f18be51a970a3079dff0774b96da9d22dbe) corresponding to the exploiter's address on zKasino. It had the this badge: 
 
-![crypt0cr1m1nal zkasino](https://hackmd.io/_uploads/SyCBGQSr3.png)
+![crypt0cr1m1nal zkasino](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/c44191d3-7139-4f00-830f-36266fe63ed9)
 
 The username piqued my curiosity but at this point, I felt as though I'd hit a dead-end. After a while, I went back to this challenge again and searched for the username on various search engines. This led me to a Twitter profile (https://twitter.com/crypt0cr1m1nal) with this tweet.
 
-![crypt0cr1m1nal twitter](https://hackmd.io/_uploads/ry8o4-rB2.png)
+![crypt0cr1m1nal twitter](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/ac808f3c-9162-4ad6-a763-fad2f4d61853)
 
 Hurray, we found the flag!
 
@@ -727,7 +727,7 @@ After the CTF, I came to know that the flag was "BALOO." Baloo, in addition to b
 
 ### Umculo
 
-> ![](https://hackmd.io/_uploads/Hy_1SQxr3.png)
+> ![Umculo](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/8508d5f2-a8ce-42a3-bd70-08afe1c2a0b7)
 > Format: XXX XXX XXX (not specifically 3 letters,English)
 > 
 > **Hint**
