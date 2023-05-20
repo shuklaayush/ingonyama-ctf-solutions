@@ -8,7 +8,7 @@ The [Ingonyama CTF](https://ctf.ingonyama.com/), a Capture-the-flag competition 
 
 There were a total of 13 challenges, including 2 fun tasks. Although I was part of an automatically assigned team (King of the Jungle), I couldn't connect with my teammates and ended up doing the contest alone. I managed to solve 10 challenges and secured the 5th position (with 1357 points) on the leaderboard, out of ~35 participating teams.
 
-Challenges that I successfully:
+Challenges that I solved:
 - Safe bn254
 - Lost Funds
 - ZokClub
@@ -92,7 +92,7 @@ Order of G = 2203960485148121921418603742825762020959382274778627105322
            = 2 * 3^2 * 13 * 19 * 29 * 37 * 613 * 983 * 11003 * 346501 * 6248149 * 405928799 * 79287328374952431757
 ```
 
-The largest prime in the prime factorization of the given curve is huge, making it computationally infeasible to solve. Therefore, I ignored the largest prime while calculating the discrete log. This gives us a solution modulo the remaining factors.
+The largest prime in the prime factorization of the order is huge, making it computationally infeasible to solve. Therefore, I ignored the largest prime while calculating the discrete log. This gives us a solution modulo the remaining factors.
 
 ```python
 dlogs = []
@@ -157,9 +157,9 @@ print(address)
 # 0xd7120a6b038ad942a2966c2769451d21d608006f
 ```
 
-The funds lead to [this address](https://goerli.explorer.zksync.io/address/0xD7120a6B038aD942A2966c2769451d21d608006f) and are then transferred back to Goerli. After a couple of hops, they are sent back to the zkSync Era testnet and end up at [final address](https://goerli.explorer.zksync.io/address/0x475e3f18be51a970a3079dff0774b96da9d22dbe) where they were used up on gas across multiple transactions. Weird.
+The funds lead to [this address](https://goerli.explorer.zksync.io/address/0xD7120a6B038aD942A2966c2769451d21d608006f) and are then transferred back to Goerli. After a couple of hops, they are sent back to the zkSync Era testnet and end up at this [final address](https://goerli.explorer.zksync.io/address/0x475e3f18be51a970a3079dff0774b96da9d22dbe), where they are used up on gas across multiple transactions. Weird.
 
-I wrote a script to decode all these transactions. Cross-referencing the function signatures with similar function on a contract database, I found out that these belong to contracts for an on-chain casino hosted at zkasino.io.
+I wrote a script to decode all these transactions. Cross-referencing the function signatures with similar functions on a contract database, I found out that these belong to contracts for an on-chain casino hosted at [zkasino.io](zkasino.io).
 
 ```python
 # Part 2
@@ -179,7 +179,7 @@ I found the [profile](https://play.zkasino.io/profile?u=0x475e3f18be51a970a3079d
 
 ![crypt0cr1m1nal zkasino](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/c44191d3-7139-4f00-830f-36266fe63ed9)
 
-The username piqued my curiosity but at this point, I felt as though I'd hit a dead-end. After a while, I went back to this challenge again and searched for the username on various search engines. This led me to a Twitter profile (https://twitter.com/crypt0cr1m1nal) with this tweet.
+The username piqued my curiosity but at this point, I felt as though I'd hit a dead-end. After a while, I went back to this challenge again and searched for the username on various search engines. This led me to a [Twitter profile](https://twitter.com/crypt0cr1m1nal) with this tweet.
 
 ![crypt0cr1m1nal twitter](https://github.com/shuklaayush/ingonyama-ctf-solutions/assets/27727946/ac808f3c-9162-4ad6-a763-fad2f4d61853)
 
@@ -195,9 +195,9 @@ Hurray, we found the flag!
 > 
 > We need your help to understand what are they up to. Try to infiltrate their group and gather the secret information.
 
-The website made it clear that only holders of the ZokClub NFT could access the secret information. The site features a detailed diagram outlining the club's operational blueprint: each club member possesses a secret and a nullifier that form part of a Merkle tree. Using the secret-nullifier combo and a given Zokrates program, they generate a zero-knowledge proof proving their club membership. By submitting their proof on another page, they could mint a club NFT. Once the NFT is in the wallet, the secret can be revealed.
+The website made it clear that only holders of the ZokClub NFT could access the secret information. The site featured a detailed diagram outlining the club's operational blueprint: each club member possesses a secret and a nullifier that are used to create a Merkle tree. Using the secret-nullifier combo and a given Zokrates program, they generate a zero-knowledge proof proving their club membership. By submitting this proof on another page, they could mint a club NFT. Once the NFT is in the wallet, the secret can be revealed.
 
-As we're not give a secret or a nullifier, I guessed that the objective was to forge a proof without this information. The Zokrates code, which generates the proof, is as follows:
+As we're not give a secret or a nullifier, I guessed that the objective was to forge a proof using  arbitrary values. The Zokrates code, which generates the ZK proof, is as follows:
 
 ```rust
 def main(u32[8] root, private MerkleProof merkleProof, field nullifierHash, private field nullifier, private field secret) -> bool {
@@ -218,7 +218,7 @@ def main(u32[8] root, private MerkleProof merkleProof, field nullifierHash, priv
 }
 ```
 
-On closer inspection, one can spot that there's no assert statement in the last line. Instead, the function merely returns a boolean indicating whether or not the nullifier+secret combo is contained in the tree. Even if the boolean is false, a proof can still be generated. So the exploit is to use an arbitrary nullifier, its hash, and the correct Merkle root and proof to generate a counterfeit proof.
+On closer inspection, one can spot that there's no assert statement in the last line. Instead, the function merely returns a boolean indicating whether or not the nullifier+secret combo is contained in the tree. Even if the boolean is false, a proof can still be generated. So the exploit is to use an arbitrary nullifier, its hash, and the correct Merkle root and Merkle proof to generate a counterfeit proof.
 
 Upon submitting the forged proof and minting the club NFT, we get access to the secret flag, thereby accomplishing our infiltration into the ZokClub.
 
@@ -268,7 +268,7 @@ The game was played on an 8x8 board like the one below
 ┗━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛
 ```
 
-After playing (and losing) the game for a few rounds against the bot, it became clear that the bot had some unfair advantage, as it was hitting the target at each shot. Given that the game was based on a ZK design and kept the state private, it wasn't immediately clear to me how the bot was cheating. I felt that either a backdoor was present, or the proofs were leaking information.
+After playing (and losing) the game a few times against the bot, it became clear that the bot had some unfair advantage. It was hitting the target at each shot. Given that the game was based on a ZK design and  supposed to keep the state private, it wasn't immediately clear to me how the bot was cheating. I felt that either a backdoor was present, or the proofs were leaking information.
 
 I started digging into the code to figure out where the bug was. In RISC Zero, [a proof](https://www.risczero.com/docs/explainers/proof-system/) comprises of a zk-SNARK and a journal entry that includes the public outputs of the computation. My hunch was that the journals were leaking state information so I started looking into the journals of all the actions. The cluster bomb one was interesting since it contained many fields:
 
@@ -282,7 +282,7 @@ pub struct ClusterCommit {
 }
 ```
 
-Everything seemed fine except for the config variable. Checking the definition of `ClusterBombParams`, we see that it contained the `GameState`, which should have been private.
+Everything seemed fine except for the config variable. Checking the definition of `ClusterBombParams`, we see that it contained the `GameState`, which should have been private. Voila!
 
 ```rust
 pub struct ClusterBombParams {
@@ -294,7 +294,7 @@ pub struct ClusterBombParams {
 ```
 After finding this, I wrote a small piece of code that took this game state, rendered it and dumped it into a file. Now, all I had to do was start the game with a cluster charge, get the opponent's board state and use it to plan optimal moves. 
 
-Both us and the bot play optimally now. But since we start first and the bot wastes a turn sending a scout, there is a high probability that we'll win. Once we win, we are awarded with the the flag.
+Both us and the bot play optimally now. But since we start first and the bot wastes a turn sending a scout, there we'd almost surely win. After winning, we are awarded with the the flag.
 
 *Shoutout to another team who skipped all of this and instead tackled this challenge in true hacking spirit by writing a script to make the bot play itself and win.*
 
@@ -350,7 +350,7 @@ def cast<N, P>(field input) -> u8[P] {
 
 Knowing this, I realized it was possible to take the given nullifier (which was known to be in the merkle tree), prepend some bytes to it, compute the nullifier hash, and generate a valid proof. Since the new nullifier differed from the old one, it wasn't rejected by the smart contract.
 
-So we generate a fake proof, mint the NFT and obtain the secret.
+So we again generate a fake proof, mint the NFT, and obtain the secret.
 
 ### It is over 9000!
 
@@ -375,7 +375,7 @@ So we generate a fake proof, mint the NFT and obtain the secret.
 > 
 > https://github.com/ingonyama-zk/ctf-over-9000
 
-The key to solving this challenge is understanding how batched works in KZG commitments. Looking into the code reveals two important functions, `open_batch` and `verify_batch`. The crucial insight comes from realizing that the `upsilon` parameter has to be random. Otherwise, it can be used to make the verification ignore some of the polynomials.
+The key to solving this challenge is understanding how batching works in KZG commitments. Looking into the code reveals two important functions, `open_batch` and `verify_batch`. The crucial insight comes from realizing that the `upsilon` parameter has to be random. Otherwise, it can be used to make the verification ignore some of the polynomials.
 
 ```rust
 fn open_batch(
@@ -425,7 +425,7 @@ fn verify_batch(
 }
 ```
 
-In the code, `u` (`upsilon`) can be selected by the prover. By hardcoding it to `0` instead of a random value, only `p1` is checked. Now since `p4` isn't checked, you can keep the polynomial the same so that Vegeta can verify the commitment to it and confirm Gohan's power level. But you can change the `y4` value, which would never be verified in the `batch_verify` function. As a result, the sum of power levels appears to be over 9000, fooling the villains.
+In the code, `u` (`upsilon`) can be selected by the prover. By hardcoding it to `0` instead of a random value, only `p1` is checked. Now since `p4` isn't checked, you can keep the polynomial the same so that Vegeta can verify the commitment to it, and confirm Gohan's power level. But you can change the `y4` value, which would never be verified in the `batch_verify` function. As a result, the sum of power levels appears to be over 9000, fooling the villains.
 
 ### Operation ZK rescue
 
@@ -550,7 +550,7 @@ $$
 
 Our objective is to generate a KZG proof that the polynomial equals $3$ at $x = 1$ within the BLS12-381 scalar field.
 
-Given that the polynomial's value is clearly not $3$ at $x = 1$, it is clear that forging a proof is our only option. So I started looking into KZG proofs in detail. [Dankrad's article](https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html) was a great resource in understanding how KZG commitments work. Essentially, a person can create a fraudulent proof if they know the secret "toxic waste" $s$ from the trusted setup. I looked into how trusted setups work by reading [Vitalik's article](https://vitalik.ca/general/2022/03/14/trustedsetup.html). The SRS string derived from the trusted setup has the following form:
+Given that the polynomial's value is clearly not $3$ at $x = 1$, it is clear that forging a proof is our only option. So I started looking into KZG commitments in detail. [Dankrad's article](https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html) was a great resource in understanding how KZG commitments work. Essentially, a person can create a fraudulent proof if they know the secret "toxic waste" $s$ from the trusted setup. I looked into how trusted setups work by reading [Vitalik's article](https://vitalik.ca/general/2022/03/14/trustedsetup.html). The SRS string derived from the trusted setup has the following form:
 
 $$
 [G_1, G_1 * s, G_1 * s^2 ... G_1 * s^{n_1-1}]\\
@@ -559,7 +559,7 @@ $$
 
 The given SRS had $n_1 = 1024$ and $n_2 = 2$ with $G_1$ and $G_2$ representing the generators of the main and secondary group of the elliptic curve.
 
-Analyzing the powers in the main group, I realized that they were repeating with a frequency of 64 i.e. $s^64 = 1$ mod p. This implied that $s$ is a 64th root of unity. To determine $s$, I wrote a simple Sage script to calculate the 64 roots of unity and find the correct one:
+Analyzing the powers in the main group, I realized that they were repeating with a frequency of 64 i.e. $s^64 = 1\mod p$. This implied that $s$ is a 64th root of unity. To determine $s$, I wrote a simple Sage script to calculate the 64 roots of unity and find the correct one:
 
 ```python
 from sage.all import *
@@ -593,7 +593,7 @@ $$
 \pi_{fake} = \frac{1}{s - y} (C - yG) 
 $$
 
-Here, $s$ is the secret, $C$ is the commitment, and $y$ is the intended fake value for which the proof is generated.
+Here, $s$ is the secret, $C$ is the commitment, and $y$ is the intended fake value for which the proof is to be generated.
 
 Below is another Sage script to compute this:
 
@@ -666,7 +666,7 @@ There were some challenges I wasn't able to solve within the timeframe of the co
 > 
 > https://github.com/ingonyama-zk/the_lost_relic
 
-We're given a bunch of plaintext-ciphertext pairs. The block cipher function, a modified MiMC hash, is given as:
+We're given a bunch of plaintext-ciphertext pairs. The block cipher function, a modified MiMC hash, for each round is given as:
 
 $$
 x_{n+1} = (x_n + k)^2
@@ -674,7 +674,7 @@ $$
 
 Our goal is to find the secret key, $k$.
 
-Initially, I spent a lot of time trying to devise an algebraic attack on the cipher, given its simplicity. However, I couldn't figure out a way. After the CTF was over, I was given the hint that one of the pairs was a slide pair and we had to do a [slide attack](https://en.wikipedia.org/wiki/Slide_attack). Below is the implementation of this attack in Sage:
+I spent a lot of time trying to devise an algebraic attack on the cipher, given its simplicity. However, I couldn't figure out a way. After the CTF was over, I was given the hint that one of the pairs was a slide pair and we had to do a [slide attack](https://en.wikipedia.org/wiki/Slide_attack). Below is the implementation of this attack in Sage:
 
 ```python
 from sage.all import *
