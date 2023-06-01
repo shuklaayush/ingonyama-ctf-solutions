@@ -74,7 +74,7 @@ print(E)
 Elliptic Curve defined by y^2 = x^3 + 2023 over Finite Field of size 21888242871839275222246405745257275088696311157297823662689037894645226208583
 ```
 
-The ECDLP problem, generally regarded as computationally infeasible, hinges on the order of the subgroup of the elliptic curve. The curve should have a large prime order subgroup, as operations are conducted in this group. If the subgroup's order is small, the [Pohlig-Hellman algorithm](https://en.wikipedia.org/wiki/Pohlig%E2%80%93Hellman_algorithm) can be used to fragment the problem into smaller, solvable parts. These parts can then be pieced back together using the Chinese Remainder Theorem (CRT) to arrive at the final solution. 
+The ECDLP problem, generally regarded as computationally infeasible, hinges on the order of the subgroup of the elliptic curve. The curve should have a large prime order subgroup, as operations are conducted in this group. If the subgroup's order is small, the [Pohlig-Hellman algorithm](https://en.wikipedia.org/wiki/Pohlig%E2%80%93Hellman_algorithm) can be used to divide the problem into smaller, solvable parts. These parts can then be pieced back together using the Chinese Remainder Theorem (CRT) to arrive at the final solution. 
 
 To check this, I factorized the order of the subgroup containing $G$:
 
@@ -294,7 +294,7 @@ pub struct ClusterBombParams {
 ```
 After finding this, I wrote a small piece of code that took this game state, rendered it and dumped it into a file. Now, all I had to do was start the game with a cluster charge, get the opponent's board state and use it to plan optimal moves. 
 
-Both us and the bot play optimally now. But since we start first and the bot wastes a turn sending a scout, there we'd almost surely win. After winning, we are awarded with the the flag.
+Both us and the bot play optimally now. But since our turn is first and the bot wastes a turn sending a scout, then we'd almost surely win. After winning, we are awarded with the the flag.
 
 *Shoutout to another team who skipped all of this and instead tackled this challenge in true hacking spirit by writing a script to make the bot play itself and win.*
 
