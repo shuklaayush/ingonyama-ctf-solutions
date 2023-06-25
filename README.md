@@ -559,7 +559,7 @@ $$
 
 The given SRS had $n_1 = 1024$ and $n_2 = 2$ with $G_1$ and $G_2$ representing the generators of the main and secondary group of the elliptic curve.
 
-Analyzing the powers in the main group, I realized that they were repeating with a frequency of 64 i.e. $s^64 = 1\mod p$. This implied that $s$ is a 64th root of unity. To determine $s$, I wrote a simple Sage script to calculate the 64 roots of unity and find the correct one:
+Analyzing the powers in the main group, I realized that they were repeating with a frequency of 64 i.e. $s^{64} = 1\mod p$. This implied that $s$ is a 64th root of unity. To determine $s$, I wrote a simple Sage script to calculate the 64 roots of unity and find the correct one:
 
 ```python
 from sage.all import *
